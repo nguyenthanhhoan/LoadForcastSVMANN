@@ -8,6 +8,7 @@ Created on Fri Jul 12 10:49:16 2019
 
 from numpy import mean
 from numpy import std
+from pandas import DataFrame
 
 def filterWithConfidenceLevel(data_all,confidence_level):
     """Summary or Description of the Function
