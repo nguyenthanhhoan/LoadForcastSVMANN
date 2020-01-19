@@ -8,6 +8,7 @@ Created on Fri Jul 12 10:49:16 2019
 
 from numpy import mean
 from numpy import std
+from pandas import DataFrame
 
 def filterWithConfidenceLevel(data_all,confidence_level):
     """Summary or Description of the Function
@@ -48,7 +49,7 @@ def filterWithConfidenceLevel(data_all,confidence_level):
     elif confidence_level == 99.99932:
         sigma = 4.5
     
-    
+    dataexcept = []
     
     # calculate summary statistics
     data_mean, data_std = mean(data_all[:,:,0].reshape(-1)), std(data_all[:,:,0].reshape(-1))
@@ -60,7 +61,11 @@ def filterWithConfidenceLevel(data_all,confidence_level):
         for j in range(data_all.shape[1]):
             if data_all[i,j,0] < lower:
                 data_all[i,j,0]= lower
+                dataexcept.append(data_all[i,j,0])
             elif data_all[i,j,0] > upper:
                 data_all[i,j,0] = upper
-                
+                dataexcept.append(data_all[i,j,0])
+    
+    df = DataFrame(dataexcept, columns= ['Power'])
+    df.to_csv (r'export_datafilter.csv', index = None, header=True)
     return data_all
