@@ -1,5 +1,6 @@
 # import xlsxwriter module 
 import xlsxwriter 
+import numpy as np
 
 def exportExcel(predict_mon, predict_sun, predict_rests, MAPE_mon, MAPE_sun, MAPE_rests, filename):
     """
