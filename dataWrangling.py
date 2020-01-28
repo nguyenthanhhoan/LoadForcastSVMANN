@@ -9,7 +9,7 @@ Created on Fri Jul 12 10:49:16 2019
 import pandas as pd
 import numpy as np
 
-def csvToArray(filename):
+def csvToArray(filename, numrow):
     """Summary or Description of the Function
 
     Parameters:
@@ -23,7 +23,7 @@ def csvToArray(filename):
     df = pd.read_csv(filename)
     
     # %% Create array
-    data = np.zeros((2975,24,133))
+    data = np.zeros((numrow,24,133))
     #Set holiday variable
     data[:,0,-1] = df.values[:,-2]
     data[:,1,-1] = df.values[:,-2]
