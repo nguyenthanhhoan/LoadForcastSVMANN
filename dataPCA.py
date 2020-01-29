@@ -45,16 +45,24 @@ def plotPCAandSplit(data_all):
     #print(diff.isna().sum())
     #print(np.argwhere(np.isinf(diff)))
     #print(np.argwhere(np.isinf(diff.dropna().drop(22405).drop(22429).drop(22404))))
-    diff_drop = np.array(diff[27768:])
+    numdiff = int(data_all.shape[0]*0.3)
+    diff_drop = np.array(diff[numdiff*24:].replace(np.nan, 0))
+    diff_drop[diff_drop == inf] = 0
+    diff_drop[diff_drop == -inf] = 0
+    #diff_drop = np.array(diff[27768:])
     
     # Plot PDF (histogram)
     
     # Cut from 01.01.2014
-    diff_main = np.zeros((data_all.shape[0] - 27768//24,24,133),dtype=np.float64)
+    diff_main = np.zeros((data_all.shape[0] - numdiff,24,133),dtype=np.float64)
     diff_main[:,:,0:1] = diff_drop.reshape(-1,24,1)
-    diff_main[:,:,1:] = data_all[1157:,:,1:]
+    diff_main[:,:,1:] = data_all[numdiff:,:,1:]
+    diff_main = np.nan_to_num(diff_main)
+    diff_main[diff_main == inf] = 0
+    diff_main[diff_main == -inf] = 0
+    bins = np.asarray([0])
     np.savez('diff_whole.npz',diff_main)
-    plt.hist(diff_drop,bins='sqrt',histtype = 'step',color='r')
+    plt.hist(diff_drop,bins='sqrt',histtype = 'step',color='r', range=(bins.min(),bins.max()))
     plt.title("PDF of the Difference Series")
     plt.xlabel('Amplitude')
     plt.ylabel('Density')
@@ -86,23 +94,23 @@ def plotPCAandSplit(data_all):
             mon.append(principalComponents[i])
             mon1.append(diff_main[i,:,0])
             mon2.append(diff_main[i])
-            mon_orig.append(data_all[1157+i,:,:])
-            premon_orig.append(data_all[1157+i-1,:,:])
+            mon_orig.append(data_all[numdiff+i,:,:])
+            premon_orig.append(data_all[numdiff+i-1,:,:])
             #plt.scatter(principalComponents[i,0],principalComponents[i,1],color='r',label="Monday")
         elif diff_main[i,0,31] == 1:
             sun.append(principalComponents[i])
             sun1.append(diff_main[i,:,0])
             sun2.append(diff_main[i])
-            sun_orig.append(data_all[1157+i,:,:])
-            presun_orig.append(data_all[1157+i-1,:,:])
+            sun_orig.append(data_all[numdiff+i,:,:])
+            presun_orig.append(data_all[numdiff+i-1,:,:])
             #plt.scatter(principalComponents[i,0],principalComponents[i,1],color='g',label="Sunday")
         else:
             #if diff_main[i,0,30] == 1:
-                #sat_orig.append(data_all[1157+i,:,0])
+                #sat_orig.append(data_all[numdiff+i,:,0])
             rests.append(principalComponents[i])
             rests1.append(diff_main[i,:,0])
             rests2.append(diff_main[i])
-            rests_orig.append(data_all[1157+i-1,:,])
+            rests_orig.append(data_all[numdiff+i-1,:,])
             #plt.scatter(principalComponents[i,0],principalComponents[i,1],color='black',label="The rests")
     mon = np.array(mon)
     sun = np.array(sun)
