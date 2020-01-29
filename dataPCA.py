@@ -13,6 +13,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+import math
+from numpy import inf
 
 
 def plotPCAandSplit(data_all):
