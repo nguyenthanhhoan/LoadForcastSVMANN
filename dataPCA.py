@@ -92,14 +92,14 @@ def plotPCAandSplit(data_all):
     presun_orig = []
     premon_orig = []
     for i in range(principalComponents.shape[0]):
-        if diff_main[i,0,31] == 1:
+        if diff_main[i,0,25] == 1:
             mon.append(principalComponents[i])
             mon1.append(diff_main[i,:,0])
             mon2.append(diff_main[i])
             mon_orig.append(data_all[numdiff+i,:,:])
             premon_orig.append(data_all[numdiff+i-1,:,:])
             #plt.scatter(principalComponents[i,0],principalComponents[i,1],color='r',label="Monday")
-        elif diff_main[i,0,30] == 1:
+        elif diff_main[i,0,31] == 1:
             sun.append(principalComponents[i])
             sun1.append(diff_main[i,:,0])
             sun2.append(diff_main[i])
