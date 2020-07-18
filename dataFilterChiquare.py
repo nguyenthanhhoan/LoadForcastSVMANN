@@ -3,12 +3,13 @@
 """
 Created on Fri Jul 12 10:49:16 2019
 
-@author: duypham
+@author: hoannguyen
 """
 
 from numpy import mean
 from numpy import std
 from pandas import DataFrame
+from sklearn.feature_selection import chi2
 
 def filterWithConfidenceLevel(data_all,confidence_level):
     """Summary or Description of the Function
