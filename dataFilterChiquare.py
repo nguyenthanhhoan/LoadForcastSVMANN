@@ -9,19 +9,20 @@ Created on Fri Jul 12 10:49:16 2019
 from numpy import mean
 from numpy import std
 from pandas import DataFrame
-from sklearn.feature_selection import chi2
+from sklearn.feature_selection import chi2, SelectKBest
+from sklearn.feature_extraction.text import CountVectorizer
 
-def filterWithConfidenceLevel(data_all,confidence_level):
-    """Summary or Description of the Function
-    this function filters the data by a given confidence level.
-    
-    Parameters:
-    data_all (array): the data about to be filtered
-    confidence_level (int): given confidence level ranging from 90 to 99.99932
-        
-    Returns:
-    data_all (array): the filtered data
-    """
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+from sklearn.preprocessing import MinMaxScaler
+X_norm = MinMaxScaler().fit_transform(X)
+chi_selector = SelectKBest(chi2, k=num_feats)
+chi_selector.fit(X_norm, y)
+chi_support = chi_selector.get_support()
+chi_feature = X.loc[:,chi_support].columns.tolist()
+print(str(len(chi_feature)), 'selected features')
+
+def filterChiWithConfidenceLevel(data_all,confidence_level):
     
     if confidence_level == 90:
         sigma = 1.645
