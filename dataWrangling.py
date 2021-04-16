@@ -330,3 +330,76 @@ def csvToArray(filename):
             data[i,22,131] = 1
             data[i,23,131] = 1
     return data
+
+def csvToArrayNoFilter(filename, numbitcode, numdatacycle):
+    """Summary or Description of the Function
+    Parameters:
+    filenam (str): the name of input file (with csv extention)
+    Returns:
+    data (array): returning arrays after wrangling to 133 elements
+    """
+    # %% Load data
+    df = pd.read_csv(filename)
+    #numbitcode = 205
+    #numcol = 96
+    numcol = numdatacycle
+    numrow = df.shape[0]
+    # %% Create array
+    data = np.zeros((numrow, numcol, numbitcode))
+    # Set holiday variable
+    for i in range(numcol):
+        data[:, i, -1] = df.values[:, -2]
+    # Set 15 minutes variable
+    for i in range(numcol):
+        data[:, i, i + 1] = 1
+    # Set 15 minutely values
+    for i in range(numcol):
+        for j in range(len(df)):
+            data[j, i, 0] = float(df.values[j, i + 2])
+    # Set weekday & day indices
+    for i in range(len(df)):
+        # Set weekday
+        if df.values[i, 0] == 'CN':
+            for w in range(numcol):
+                data[i, w, numcol + 7] = 1
+        else:
+            a = int(df.values[i, 0]) + numcol -1
+            for w in range(numcol):
+                data[i, w, a] = 1
+
+        # Set day
+        b = int(df.values[i, 1][-5:-3]) + numcol + 7
+        for w in range(numcol):
+            data[i, w, b] = 1
+
+        # Set week indices
+        c = int(df.values[i, -1]) + numcol + 38
+        for w in range(numcol):
+            data[i, w, c] = 1
+
+        # Set month indices
+        d = int(df.values[i, 1][-8:-6]) + numcol + 91
+        for w in range(numcol):
+            data[i, w, d] = 1
+
+        # Set quater indices
+        if int(df.values[i, 1][-8:-6]) in [1, 2, 3]:
+            for w in range(numcol):
+                data[i, w, numcol + 104] = 1
+
+        elif int(df.values[i, 1][-8:-6]) in [4, 5, 6]:
+            for w in range(numcol):
+                data[i, w, numcol + 105] = 1
+
+        elif int(df.values[i, 1][-8:-6]) in [7, 8, 9]:
+            for w in range(numcol):
+                data[i, w, numcol + 106] = 1
+
+        else:
+            for w in range(numcol):
+                data[i, w, numcol + 107] = 1
+        # Set holiday indices
+        for w in range(numcol):
+            data[i, w, numcol + 108] = df.values[i, -2]
+
+    return data
